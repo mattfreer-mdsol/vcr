@@ -38,16 +38,22 @@ module VCR
         # https://gist.github.com/652968
         @main_object.Before(tag_name) do |scenario|
           options = original_options.dup
+          p "options debugging"
+          p "options: #{ options }"
 
           cassette_name = if options.delete(:use_scenario_name)
+            p "cassette name debugging"
             if scenario.respond_to?(:outline?) && scenario.outline?
+              p "scenario responds to outline"
               ScenarioNameBuilder.new(scenario).cassette_name
             elsif scenario.respond_to?(:scenario_outline)
+              p "scenario responds to scenario_outline"
               [ scenario.scenario_outline.feature.name.split("\n").first,
                 scenario.scenario_outline.name,
                 scenario.name.split("\n").first
               ].join("/")
             else
+              p "scenario feature"
               [ scenario.feature.name.split("\n").first,
                 scenario.name.split("\n").first
               ].join("/")
@@ -55,6 +61,7 @@ module VCR
           else
             "cucumber_tags/#{tag_name.gsub(/\A@/, '')}"
           end
+          p "cassette name: #{ cassette_name }"
 
           VCR.insert_cassette(cassette_name, options)
         end
