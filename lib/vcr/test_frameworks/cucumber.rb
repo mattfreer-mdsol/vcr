@@ -29,8 +29,12 @@ module VCR
     #   cassette according to the scenario name.
     def tags(*tag_names)
       original_options = tag_names.last.is_a?(::Hash) ? tag_names.pop : {}
+      p "tags debugging"
+      p "tag_names: #{ tag_names }"
+      p "original_options: #{ original_options }"
       tag_names.each do |tag_name|
         tag_name = "@#{tag_name}" unless tag_name =~ /\A@/
+        p "tag_name: #{ tag_name }"
 
         # It would be nice to use an Around hook here, but
         # cucumber has a bug: background steps do not run
